@@ -17,18 +17,19 @@ class SentEmailMessage:
 
 
 class EmailHandler(MediumHandler):
-    def load(self, message, context):
-        return Template("Hello, world. This is " + message.name + " message.")
+    def load(self, message, context, **variants):
+        return {"template": Template("Hello, world. This is " + message.name + " message.")}
 
-    def render(self, template: Template, **context):
-        return template.render(context)
+    def render(self, message, template, context):
+        return template["template"].render(context)
 
-    def send(self, rendered, recipient: EmailContact, sender: EmailContact):
-        return SentEmailMessage(sender=sender, recipient=recipient, subject="", body=rendered)
+    def send(self, message, rendered, context):
+        return SentEmailMessage(sender=context["sender"], recipient=context["recipient"], subject="", body=rendered)
 
 
 class EatAtJoeMessage(Message):
     name = "eat_at_joe"
+    media = {"email"}
 
 
 def test_basic_notification():
@@ -38,13 +39,13 @@ def test_basic_notification():
     message = EatAtJoeMessage()
     context = {"language": "fr"}
 
-    recipient = EmailContact("Romain Dorgueil", "romain@dorgueil.net")
+    recipient = EmailContact("Romain Dorgueil", "hiromi@makersquad.fr")
     sender = EmailContact("Makersquad", "noreply@makersquad.fr")
 
     sent = notifications.send(message, context, recipients=[recipient], sender=sender)
 
     assert len(sent) == 1
 
-    assert sent[0].sender == sender
-    assert sent[0].recipient == recipient
-    assert sent[0].body == "Hello, world. This is eat_at_joe message."
+    assert sent[0].status.sender == sender
+    assert sent[0].status.recipient == recipient
+    assert sent[0].status.body == "Hello, world. This is eat_at_joe message."
