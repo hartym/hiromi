@@ -14,10 +14,15 @@ class Message:
     template = None
     rendered = None
 
+    default_templates = None
+
     def validate(self, parameters):
         return parameters
 
-    default_templates = {}
+    def __new__(cls):
+        if cls.default_templates is None:
+            cls.default_templates = {}
+        return super().__new__(cls)
 
     def get_default_template(self, medium, *variant):
         if medium not in self.default_templates:

@@ -1,3 +1,15 @@
 -e .[dev]
 -r requirements.txt
-isort==5.1.4
+atomicwrites==1.4.0
+attrs==19.3.0
+coverage==4.5.4
+isort==5.2.2
+more-itertools==8.4.0
+packaging==20.4
+pluggy==0.13.1
+py==1.9.0
+pyparsing==2.4.7
+pytest-cov==2.10.0
+pytest==4.6.11
+six==1.15.0
+wcwidth==0.2.5
